@@ -46,7 +46,7 @@ class MCTS {
     this.root = new Node(rootGame);
   }
 
-  run(iterations = 1000) {
+  run(iterations = 10000) {
     for (let i = 0; i < iterations; i++) {
       this.runIteration();
     }
@@ -101,7 +101,7 @@ class MCTS {
     }
   }
 
-  runForTime(ms = 100) {
+  runForTime(ms = 1000) {
     const end = Date.now() + ms;
     while (Date.now() < end) {
       this.runIteration();
