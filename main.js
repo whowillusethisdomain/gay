@@ -1,51 +1,30 @@
+import { Game } from './mcts/game.js';
+import { MCTS } from './mcts/mcts.js';
+import { drawStats, drawBoard, getClickedCell } from './mcts/viz.js';
 
-let game = new TicTacToe();
-let rootElement = document.getElementById('game');
+const canvas = document.getElementById('board');
+const statsDiv = document.getElementById('stats');
 
-function render() {
-  rootElement.innerHTML = '';
-  game.board.forEach((val, idx) => {
-    const cell = document.createElement('div');
-    cell.className = 'cell';
-    cell.textContent = val || '';
-    cell.onclick = () => {
-      if (!val && !game.isGameOver()) {
-        game.performMove(idx);
-        render();
-        setTimeout(aiMove, 200);
-      }
-    };
-    rootElement.appendChild(cell);
-  });
-  updateEvaluation();
+let game = new Game();
+let mcts = new MCTS(game);
+
+function update() {
+  drawBoard(game.state, canvas);
+  mcts = new MCTS(game);
+  mcts.run(10000); // ← 여기서 탐색 수를 설정
+  const stats = mcts.root.children.map(c => ({
+    move: c.move,
+    visits: c.visits,
+    winRate: c.visits ? (c.wins / c.visits) : 0
+  }));
+  drawStats(stats, statsDiv);
 }
 
-function aiMove() {
-  const tree = new MCTS(game);
-  tree.run(1000);
-  const best = tree.bestMove();
-  if (best !== null) {
-    game.performMove(best);
-    render();
+canvas.addEventListener('click', e => {
+  const idx = getClickedCell(e, canvas);
+  if (game.performMove(idx)) {
+    update();
   }
-}
+});
 
-function updateEvaluation() {
-  const tree = new MCTS(game);
-  tree.run(500);
-
-  const children = tree.root.children;
-  if (!children || children.length === 0) {
-    document.getElementById('bar-inner').style.width = `50%`;
-    document.getElementById('eval-text').textContent = `Evaluation: 50%`;
-    return;
-  }
-
-  const values = children.map(c => c.wins / c.visits);
-  const maxValue = Math.max(...values);
-
-  document.getElementById('bar-inner').style.width = `${maxValue * 100}%`;
-  document.getElementById('eval-text').textContent = `Evaluation: ${(maxValue * 100).toFixed(1)}%`;
-}
-
-render();
+update();
