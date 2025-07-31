@@ -1,22 +1,26 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>TicTacToe with MCTS</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Tic-Tac-Toe MCTS 10000</title>
+  <style>
+    body, html { margin:0; padding:0; height:100%; font-family: sans-serif; }
+    #app { display:flex; height:100vh; }
+    #sidebar { width:240px; background:#f8f8f8; padding:16px; overflow:auto; }
+    #main { flex:1; display:flex; align-items:center; justify-content:center; }
+    #board { border:2px solid #333; }
+  </style>
 </head>
 <body>
-  <h1>TicTacToe with MCTS</h1>
-  <div id="game"></div>
-  <div id="eval">
-    <h2>Evaluation</h2>
-    <div id="bar">
-      <div id="bar-inner"></div>
+  <div id="app">
+    <div id="sidebar">
+      <h2>MCTS 평가치</h2>
+      <div id="stats"></div>
     </div>
-    <p id="eval-text">Evaluation: 50%</p>
+    <div id="main">
+      <canvas id="board" width="300" height="300"></canvas>
+    </div>
   </div>
-  <script src="mcts.js"></script>
-  <script src="tictactoe.js"></script>
-  <script src="main.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
